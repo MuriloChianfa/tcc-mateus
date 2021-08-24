@@ -6,11 +6,10 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.wifi.WifiManager;
+import android.graphics.Point;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -19,12 +18,12 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.teste.Core.Base64;
@@ -36,15 +35,12 @@ import com.example.teste.Network.Server;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShaveActivity extends AppCompatActivity
+public class ShareActivity extends AppCompatActivity
 {
     Button btnOnOff, btnDiscover, btnSend;
     ListView listView;
-    TextView read_msg_box;
     EditText writeMsg;
-    TextView connectionStatus;
 
-    WifiManager wifiManager;
     WifiP2pManager mManager;
     WifiP2pManager.Channel mChannel;
 
@@ -55,14 +51,14 @@ public class ShaveActivity extends AppCompatActivity
     String[] deviceNameArray;
     WifiP2pDevice[] deviceArray;
 
-    Server serverClass;
-    Client clientClass;
-    IOStream sendReceive;
+    public static Server server;
+    public static Client client;
+
+    public static String currentConnectionType;
 
     Bitmap bitmap;
     ImageView imageView;
-
-    byte[] imageBytes;
+    ImageView imageViewColega;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -70,14 +66,13 @@ public class ShaveActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviarinterface);
 
-        Intent intent = getIntent();
-        bitmap = intent.getParcelableExtra("BitmapImage");
+        this.bitmap = (getIntent()).getParcelableExtra("BitmapImage");
 
         ImageView imageView = findViewById(R.id.verImagem);
-        imageView.setImageBitmap(bitmap);
+        imageView.setImageBitmap(this.bitmap);
 
-        initialWork();
-        exqListener();
+        draw();
+        addListeners();
     }
 
     @Override
@@ -94,11 +89,11 @@ public class ShaveActivity extends AppCompatActivity
         unregisterReceiver(mReceiver);
     }
 
-    private void exqListener()
+    private void addListeners()
     {
         btnDiscover.setOnClickListener(view -> {
-            if (ActivityCompat.checkSelfPermission(ShaveActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(ShaveActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 255);
+            if (ActivityCompat.checkSelfPermission(ShareActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ShareActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 255);
                 return;
             }
 
@@ -107,13 +102,13 @@ public class ShaveActivity extends AppCompatActivity
                 @Override
                 public void onSuccess()
                 {
-                    Toast.makeText(ShaveActivity.this, "Searching...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShareActivity.this, "Searching...", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onFailure(int reason)
                 {
-                    Toast.makeText(ShaveActivity.this, "Error on search!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ShareActivity.this, "Error on search!", Toast.LENGTH_SHORT).show();
                 }
             });
         });
@@ -124,8 +119,8 @@ public class ShaveActivity extends AppCompatActivity
             WifiP2pConfig config = new WifiP2pConfig();
             config.deviceAddress = device.deviceAddress;
 
-            if (ActivityCompat.checkSelfPermission(ShaveActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(ShaveActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 255);
+            if (ActivityCompat.checkSelfPermission(ShareActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ShareActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 255);
                 return;
             }
 
@@ -144,22 +139,52 @@ public class ShaveActivity extends AppCompatActivity
         });
 
         btnSend.setOnClickListener(view -> {
-            imageBytes = Base64.encodeTobase64(bitmap);
-            sendReceive.write(imageBytes);
+            if (null == ShareActivity.currentConnectionType) {
+                System.out.println("Your aren't connected!");
+
+                Toast.makeText(getApplicationContext(), "Your aren't connected!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            System.out.println("Sending image converted in base64 to peer...");
+
+            byte[] data = Base64.encodeTobase64(this.bitmap);
+
+            // https://codebeautify.org/base64-to-image-converter
+            // String converted = android.util.Base64.encodeToString(data, android.util.Base64.DEFAULT);
+            // System.out.println("Sent data image: ");
+            // System.out.println(converted);
+
+            try {
+                if (ShareActivity.currentConnectionType.equals("Host")) {
+                    ShareActivity.server.stream.write(data);
+                    return;
+                }
+
+                ShareActivity.client.stream.write(data);
+            } catch (Throwable exception) {
+                System.out.println(exception.getMessage());
+
+                Toast.makeText(getApplicationContext(), "An error occurred when send image!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void initialWork() {
-        btnOnOff = findViewById( R.id.onOff );
-        btnDiscover = findViewById( R.id.discover );
-        btnSend = findViewById( R.id.sendButton );
-        listView = findViewById( R.id.peerListView );
-        read_msg_box = findViewById( R.id.readMsg );
-        writeMsg = findViewById( R.id.writeMsg );
-        connectionStatus = findViewById( R.id.connectionStatus );
-        imageView = findViewById( R.id.verImagem );
+    private void draw() {
+        btnOnOff = findViewById(R.id.onOff);
+        btnDiscover = findViewById(R.id.discover);
+        btnSend = findViewById(R.id.sendButton);
+        listView = findViewById(R.id.peerListView);
+        writeMsg = findViewById(R.id.writeMsg);
+        imageView = findViewById(R.id.verImagem);
 
-        wifiManager = (WifiManager) getApplicationContext().getSystemService( Context.WIFI_SERVICE );
+        Display display = getWindowManager().getDefaultDisplay();
+
+        Point size = new Point();
+        display.getSize(size);
+
+        imageView.setMinimumHeight(size.y / 2);
+        imageView.setMinimumWidth(size.x / 2);
 
         mManager = (WifiP2pManager) getSystemService( Context.WIFI_P2P_SERVICE );
         mChannel = mManager.initialize(this, getMainLooper(), null);
@@ -198,7 +223,7 @@ public class ShaveActivity extends AppCompatActivity
             }
 
             if (peers.size() == 0) {
-                Toast.makeText(ShaveActivity.this, "No devices located!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ShareActivity.this, "No devices located!", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -213,14 +238,16 @@ public class ShaveActivity extends AppCompatActivity
             if (wifiP2pInfo.groupFormed && wifiP2pInfo.isGroupOwner) {
                 connectionType = "Host";
 
-                serverClass = new Server(handler);
-                serverClass.start();
+                ShareActivity.server = new Server(handler);
+                ShareActivity.server.start();
             } else if (wifiP2pInfo.groupFormed) {
                 connectionType = "Client";
 
-                clientClass = new Client(wifiP2pInfo.groupOwnerAddress, handler);
-                clientClass.start();
+                ShareActivity.client = new Client(wifiP2pInfo.groupOwnerAddress, handler);
+                ShareActivity.client.start();
             }
+
+            ShareActivity.currentConnectionType = connectionType;
 
             Toast.makeText(getApplicationContext(), connectionType, Toast.LENGTH_SHORT ).show();
         }
@@ -233,8 +260,17 @@ public class ShaveActivity extends AppCompatActivity
 
                 Log.v("img,", "" + readBuff.length);
 
-                ImageView receive = findViewById(R.id.verImagemColega);
-                receive.setImageBitmap(Base64.decodeBase64(readBuff));
+                imageViewColega = findViewById(R.id.verImagemColega);
+
+                Display display = getWindowManager().getDefaultDisplay();
+
+                Point size = new Point();
+                display.getSize(size);
+
+                imageViewColega.setMinimumHeight(size.y / 2);
+                imageViewColega.setMinimumWidth(size.x / 2);
+
+                imageViewColega.setImageBitmap(Base64.decodeBase64(readBuff));
                 break;
 
             case IOStream.MESSAGE_WRITE: break;

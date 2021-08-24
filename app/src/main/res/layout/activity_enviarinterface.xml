@@ -5,19 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ShaveActivity"
+    tools:context=".ShareActivity"
     android:background="@drawable/fundo">
-
-    <!--
-    <Button
-        android:id="@+id/onOff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_margin="28dp"
-        android:layout_marginTop="55dp"
-        android:text="Wifi On"/> -->
 
     <TextView
         android:id="@+id/connectionStatus"
@@ -66,20 +55,6 @@
         android:text="Mensagem"
         android:textAlignment="center"/>
 
-    <!--
-    <EditText
-        android:id="@+id/writeMsg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="-2dp"
-        android:layout_marginBottom="1dp"
-        android:layout_toStartOf="@+id/sendButton"
-        android:ems="10"
-        android:inputType="textPersonName" /> -->
-
     <Button
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
@@ -90,15 +65,23 @@
 
     <ImageView
         android:id="@+id/verImagem"
-        android:layout_width="140dp"
-        android:layout_height="156dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
     <ImageView
         android:id="@+id/verImagemColega"
-        android:layout_width="148dp"
-        android:layout_height="154dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true" />
 

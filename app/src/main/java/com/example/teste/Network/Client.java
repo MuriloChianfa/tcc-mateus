@@ -9,9 +9,8 @@ import java.net.Socket;
 
 public class Client extends Thread
 {
-    String remoteAddress;
-    IOStream stream;
-
+    public IOStream stream;
+    public String remoteAddress;
     Handler handler;
 
     public Client(InetAddress hostAddress, Handler handler)

@@ -8,7 +8,7 @@ import java.net.Socket;
 
 public class Server extends Thread
 {
-    IOStream stream;
+    public IOStream stream;
     Handler handler;
 
     public Server(Handler handler) {

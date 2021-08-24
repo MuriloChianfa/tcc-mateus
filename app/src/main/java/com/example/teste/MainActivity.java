@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
 
                 imageView.setImageBitmap(bitmap);
 
-                Intent intentEnviar = new Intent(MainActivity.this, ShaveActivity.class);
+                Intent intentEnviar = new Intent(MainActivity.this, ShareActivity.class);
                 intentEnviar.putExtra("BitmapImage", bitmap);
                 startActivity(intentEnviar);
             }
@@ -60,10 +60,10 @@ public class MainActivity extends AppCompatActivity
         final AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
 
         LayoutInflater inflater = getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.custompopup_mouth,null);
+        View convertView = inflater.inflate(R.layout.custompopup_mouth,null);
         alert.setView( convertView );
 
-        final ListView lv = (ListView) convertView.findViewById( R.id.listaImagens);
+        final ListView lv = convertView.findViewById( R.id.listaImagens);
         lv.setAdapter(new AvatarHelper(MainActivity.this, Head.All()));
 
         final AlertDialog show = alert.show();

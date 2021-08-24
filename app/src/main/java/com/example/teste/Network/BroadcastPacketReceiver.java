@@ -8,15 +8,15 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.widget.Toast;
 
-import com.example.teste.ShaveActivity;
+import com.example.teste.ShareActivity;
 
 public class BroadcastPacketReceiver extends BroadcastReceiver
 {
     private final WifiP2pManager mManager;
     private final WifiP2pManager.Channel mChannel;
-    private final ShaveActivity mActivity;
+    private final ShareActivity mActivity;
 
-    public BroadcastPacketReceiver(WifiP2pManager mManager, WifiP2pManager.Channel mChannel, ShaveActivity mActivity)
+    public BroadcastPacketReceiver(WifiP2pManager mManager, WifiP2pManager.Channel mChannel, ShareActivity mActivity)
     {
         this.mManager = mManager;
         this.mChannel = mChannel;

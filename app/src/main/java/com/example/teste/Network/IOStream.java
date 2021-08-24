@@ -26,8 +26,8 @@ public class IOStream extends Thread
         try {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
@@ -37,7 +37,7 @@ public class IOStream extends Thread
         byte[] buffer = new byte[1024];
         int bytes;
 
-        while (this.socket !=  null) {
+        while (this.socket != null) {
             try {
                 inputStream.reset();
 
@@ -46,8 +46,8 @@ public class IOStream extends Thread
                 if (bytes > 0) {
                     this.handler.obtainMessage(MESSAGE_READ, bytes, -1, buffer).sendToTarget();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException exception) {
+                System.out.println(exception.getMessage());
             }
         }
     }
@@ -56,8 +56,8 @@ public class IOStream extends Thread
     {
         try {
             outputStream.write(bytes);
-        } catch (IOException e){
-            e.printStackTrace();
+        } catch (IOException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 }
