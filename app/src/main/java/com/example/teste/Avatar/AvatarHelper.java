@@ -1,4 +1,4 @@
-package com.example.teste;
+package com.example.teste.Avatar;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -8,13 +8,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.example.teste.R;
+
 import java.util.List;
 
-public class ParteAvatarAdapter extends BaseAdapter {
+public class AvatarHelper extends BaseAdapter
+{
     public final Context context;
-    public final List<ParteAvatar> lsData;
 
-    public ParteAvatarAdapter(Context context, List<ParteAvatar> lsData){
+    public final List<AvatarPart> lsData;
+
+    public AvatarHelper(Context context, List<AvatarPart> lsData)
+    {
         this.context = context;
         this.lsData = lsData;
     }
@@ -25,7 +30,7 @@ public class ParteAvatarAdapter extends BaseAdapter {
     }
 
     @Override
-    public ParteAvatar getItem(int position) {
+    public AvatarPart getItem(int position) {
         return lsData.get(position);
     }
 
@@ -35,11 +40,13 @@ public class ParteAvatarAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
         @SuppressLint("ViewHolder") View view = LayoutInflater.from(context).inflate(R.layout.itemrow, parent, false);
+
         ImageView img = view.findViewById(R.id.imagemIndividual);
-        ParteAvatar parteAvatar = lsData.get(position);
-        img.setImageResource(parteAvatar.getIcone());
+        img.setImageResource((lsData.get(position)).getIcon());
+
         return view;
     }
 }

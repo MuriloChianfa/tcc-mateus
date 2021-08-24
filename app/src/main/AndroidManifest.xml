@@ -20,9 +20,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".professor.MainActivityProfessor"></activity>
-        <activity android:name=".compartilhar.CompartilharActivity" />
-        <activity android:name=".compartilhar.EnviarActivity" />
+        <activity android:name=".ShaveActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

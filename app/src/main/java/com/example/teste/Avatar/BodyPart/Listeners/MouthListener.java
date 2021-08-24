@@ -1,4 +1,4 @@
-package com.example.teste.partes;
+package com.example.teste.Avatar.BodyPart.Listeners;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,35 +8,41 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.example.teste.ParteAvatarAdapter;
-import com.example.teste.ParteAvatar;
+import com.example.teste.Avatar.AvatarHelper;
+import com.example.teste.Avatar.AvatarPart;
+import com.example.teste.Avatar.BodyPart.Mouth;
 import com.example.teste.R;
 
-public class BotaoBocaListener implements View.OnClickListener {
-
+public class MouthListener implements View.OnClickListener
+{
     private final Activity context;
 
-    public BotaoBocaListener(Activity context){
+    public MouthListener(Activity context)
+    {
         this.context = context;
     }
 
     @Override
     public void onClick(View v) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-        LayoutInflater inflater = context.getLayoutInflater();
-        View convertView = inflater.inflate( R.layout.custompopup_mouth,null );
+
+        View convertView = (context.getLayoutInflater()).inflate(R.layout.custompopup_mouth,null);
         alertDialog.setView(convertView);
+
         final ListView lv = convertView.findViewById( R.id.listaImagens );
-        lv.setAdapter( new ParteAvatarAdapter( context, ParteAvatar.getBocaIcones() ) );
+        lv.setAdapter(new AvatarHelper(context, Mouth.All()));
+
         final AlertDialog show = alertDialog.show();
-        lv.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ParteAvatar parteAvatar = (ParteAvatar) parent.getItemAtPosition(position);
+                AvatarPart avatarPart = (AvatarPart) parent.getItemAtPosition(position);
                 ImageView image = context.findViewById(R.id.imgBoca);
-                image.setImageResource(parteAvatar.getImagem());
+                image.setImageResource(avatarPart.getImage());
+
                 show.dismiss();
             }
-        } );
+        });
     }
 }
