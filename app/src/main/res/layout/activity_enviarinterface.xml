@@ -84,31 +84,23 @@
         android:id="@+id/sendButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="256dp"
-        android:layout_marginEnd="257dp"
-        android:layout_marginBottom="18dp"
         android:text="Send" />
 
     <ImageView
         android:id="@+id/verImagem"
-        android:layout_width="240dp"
-        android:layout_height="456dp"
+        android:layout_width="140dp"
+        android:layout_height="156dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="37dp"
-        android:layout_marginBottom="312dp" />
+        android:layout_alignParentTop="true" />
 
     <ImageView
         android:id="@+id/verImagemColega"
-        android:layout_width="248dp"
-        android:layout_height="454dp"
+        android:layout_width="148dp"
+        android:layout_height="154dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="316dp" />
+        android:layout_alignParentTop="true" />
 
 
 </RelativeLayout>

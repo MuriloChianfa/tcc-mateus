@@ -19,7 +19,6 @@ import com.example.teste.partes.BotaoBocaListener;
 import com.example.teste.partes.BotaoCabeloListener;
 import com.example.teste.partes.BotaoNarizListener;
 import com.example.teste.partes.BotaoOlhosListener;
-import com.example.teste.professor.MainActivityProfessor;
 
 import java.util.List;
 
@@ -53,16 +52,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
 
-        /*Button btReceber  = findViewById( R.id.botaoReceber );
-        btReceber.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentReceber = new Intent( MainActivity.this, MainActivityProfessor.class );
-                startActivity( intentReceber );
-            }
-        } );*/
-
-        //Escolher o avatar inicial
+        // Escolher o avatar inicial
         final AlertDialog.Builder alert = new AlertDialog.Builder( MainActivity.this );
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate( R.layout.custompopup_mouth,null );

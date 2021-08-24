@@ -1,5 +1,6 @@
 package com.example.teste;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,12 +36,10 @@ public class ParteAvatarAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.itemrow, parent, false);
+        @SuppressLint("ViewHolder") View view = LayoutInflater.from(context).inflate(R.layout.itemrow, parent, false);
         ImageView img = view.findViewById(R.id.imagemIndividual);
         ParteAvatar parteAvatar = lsData.get(position);
         img.setImageResource(parteAvatar.getIcone());
         return view;
     }
-
-
 }
